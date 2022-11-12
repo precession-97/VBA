@@ -20,4 +20,4 @@ cd $copyToPath
 cmd.exe /c cscript ${repoName}/vbac.wsf decombine
 
 # 生成されたファイルをリポジトリに複製
-cp -f ${repoName}/src/*/*.* $repoPath/src/*
+cp -rf ${repoName}/src $repoPath
