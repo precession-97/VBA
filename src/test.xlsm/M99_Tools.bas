@@ -39,4 +39,34 @@ Function GetVerticalCollection(ws As Worksheet, startCellY As Long, startCellX A
 
 End Function
 
+' /* ---------------------------------------------------------------------------
+'
+'   文字列 targetStr に対して、文字列パターン pattern が合致するかを判定する関数
+'   Args:
+'       targetStr   String      文字列の内容を検証したいデータ
+'       pattern     String      検証したい内容（正規表現可）
+'                               正規表現の記述方法はサイト等で参照（検索ワード："vba regexp" etc.）
+'
+'   Return:
+'       Boolean                 patternに合致していた場合 True
+'
+' ----------------------------------------------------------------------------
+' [Ex.]
+'       targetStr = "10E8", pattern = "[^0-9]"  >> True    (targetStrに半角数字以外の文字が含まれる)
+'       -> 狭義的な0以上の整数判定に一役    cf. If IsMatched2Pattern(str, "[^0-9]") Then (0以上の整数ではない)
+'
+'       【備忘録】IsNumeric関数だと "10E8" は True (100000000 と解釈される)
+'
+' ----------------------------------------------------------------------------*/
+Function IsMatched2Pattern(targetStr As String, pattern As String) As Boolean
 
+    Dim objReg As Object
+    Set objReg = CreateObject("VBScript.RegExp")
+    
+    objReg.IgnoreCase = False   '// 大文字・小文字を区別
+    objReg.pattern = pattern
+    
+    '// patternにマッチする場合はTrue
+    IsMatched2Pattern = objReg.test(targetStr)
+
+End Function
