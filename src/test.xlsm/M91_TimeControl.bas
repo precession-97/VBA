@@ -11,6 +11,59 @@ End Type
 
 '/* ------------------------------------------------------------------------
 '
+' 与えられた文字列を独自の時間型(ExTime)として変換可能かを返す関数
+' Args;
+'   sTime       String
+'
+' Return
+'               Boolean     変換可能な場合、True
+'
+' ------------------------------------------------------------------------- */
+Function CanConv2ExTime(sTime As String) As Boolean
+
+    Dim strArray() As String
+    strArray = Split(sTime, ":")
+    
+    Dim et As ExTime
+    
+    '/* 引数チェック① */
+    If UBound(strArray) <> 1 Then
+    
+        '// sTimeに ":" が含まれていない、または 2つ以上含まれている ( -> 正常に変換できない)
+        CanConv2ExTime = False
+        Exit Function
+    
+    End If
+    
+    '/* ▼ strArrayは(0),(1) で構成 */
+    
+    '/* 引数チェック② */
+    If M99_Tools.IsMatched2Pattern(strArray(0), "[^0-9]") _
+            Or M99_Tools.IsMatched2Pattern(strArray(1), "[^0-9]") Then
+    
+        '// strArray内のどちらかに半角数字でない文字が含まれている ( -> 正常に変換できない)
+        CanConv2ExTime = False
+        Exit Function
+    
+    End If
+    
+    '/* ▼ strArray(0),(1) は半角数字のみで構成 */
+    
+    '/* 引数チェック③ */
+    If strArray(0) = "" Or strArray(1) = "" Then
+    
+        '// strArray内のどちらかが文字数0の文字列である ( -> 正常に変換できない)
+        CanConv2ExTime = False
+        Exit Function
+    
+    End If
+    
+    CanConv2ExTime = True
+
+End Function
+
+'/* ------------------------------------------------------------------------
+'
 ' 与えられた文字列を独自の時間型(ExTime)として変換する関数
 ' Args;
 '   sTime       String      "hh:mm" ※ "hh:mm:ss" etc. はNG
@@ -161,6 +214,7 @@ Function ConvBasedOnRefTime(et As ExTime, refTime As ExTime) As ExTime
     If CompareExTime(et, refTime) = ">" Or CompareExTime(et, refTime) = "=" Then
         '// 無変換で返却
         ConvBasedOnRefTime = et
+        Exit Function
     End If
     
     '// ▼ 時間変換(24時間加算)
